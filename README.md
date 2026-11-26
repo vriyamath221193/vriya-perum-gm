@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Keuangan Paguyuban Griya Mulya</title>
+<link rel="canonical" href="https://vriyamath221193.github.io/vriya-perum-gm/">
 <meta name="theme-color" content="#003d79">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -701,15 +702,59 @@ body:has(#lg:not([hidden])) #ai,body:has(#lg:not([hidden])) #aip{display:none}
 #ai{animation:aiFloat 3.6s ease-in-out infinite}#ai:hover{animation:none}
 #ai .ey{transform-box:fill-box;transform-origin:center;animation:aiBlink 5s infinite}
 #aip:not([hidden]){animation:aiPop .25s cubic-bezier(.2,.7,.2,1) both}}
+#aip{width:min(340px,calc(100vw - 32px));padding:0;overflow:hidden}
+#aip .ah{background:linear-gradient(135deg,#003d79,#002b5b);color:#fff;padding:12px 16px}#aip .ah b{color:#fff;margin:0}#aip .ah small{display:block;font-size:12px;color:#b7c9e3}
+#aip .am{max-height:min(38vh,260px);overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:#f7f9fc}
+#aip .m{max-width:88%;padding:9px 12px;border-radius:14px;font-size:13.5px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
+#aip .m.a{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px}
+#aip .m.u{align-self:flex-end;background:#003d79;color:#fff;border-bottom-right-radius:4px}
+#aip .m.ty{color:var(--mute);letter-spacing:2px}
+#aip .aq{display:flex;flex-wrap:wrap;gap:6px;padding:8px 14px 0}
+#aip .aq button{background:#fff4d9;color:#6b4500;border:1px solid #f6dfaa;border-radius:99px;padding:6px 11px;font-size:12.5px;font-weight:600;cursor:pointer}
+#aip .af{display:flex;gap:8px;padding:10px 14px}#aip .af input{flex:1;min-height:40px;border-radius:12px;font-size:14px}#aip .af .btn{min-height:40px}
+#aip .al{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 12px}#aip .al button{background:var(--hl);color:#003d79;border:0;border-radius:99px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer}
+#aip .al span{width:100%;font-size:11.5px;color:var(--mute)}
+@media (prefers-reduced-motion:no-preference){@keyframes aiDot{0%,100%{opacity:.35}50%{opacity:1}}#aip .m.ty{animation:aiDot 1s infinite}}
 </style>
 <button id="ai" type="button" aria-label="Asisten AI" aria-expanded="false" aria-controls="aip"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 5v5" stroke="#fcb017" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="4.5" r="2.4" fill="#fcb017"/><rect x="7" y="11" width="26" height="21" rx="7" fill="#fff"/><rect x="3" y="18" width="3.5" height="7" rx="1.75" fill="#fcb017"/><rect x="33.5" y="18" width="3.5" height="7" rx="1.75" fill="#fcb017"/><rect x="10.5" y="14.5" width="19" height="14" rx="4.5" fill="#002b5b"/><ellipse class="ey" cx="15.5" cy="20.5" rx="2.4" ry="2.8" fill="#fcb017"/><ellipse class="ey" cx="24.5" cy="20.5" rx="2.4" ry="2.8" fill="#fcb017"/><path d="M16.5 25.2c2 1.4 5 1.4 7 0" stroke="#fcb017" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-<div id="aip" role="dialog" aria-label="Asisten AI" hidden><b>Halo, saya asisten Griya Mulya</b><p>Mau buka bagian yang mana?</p><div class="ql"><button type="button" data-tab="ringkasan">Ringkasan keuangan</button><button type="button" data-tab="buku">Buku kas</button><button type="button" data-tab="iuran">Iuran warga</button><button type="button" data-tab="bayar">Pembayaran iuran</button><button type="button" data-tab="lapor">Laporan</button></div></div>
+<div id="aip" role="dialog" aria-label="Asisten AI" hidden><div class="ah"><b>Asisten Griya Mulya</b><small>Tanya soal kas dan iuran</small></div><div id="aim" class="am" aria-live="polite"></div><div id="aq" class="aq"></div><form id="aif" class="af"><input id="ai-in" maxlength="300" placeholder="Tulis pertanyaan…" autocomplete="off" aria-label="Pertanyaan"><button type="submit" class="btn sm" id="ai-go">Kirim</button></form><div class="al"><span>Buka menu:</span><button type="button" data-tab="ringkasan">Ringkasan</button><button type="button" data-tab="buku">Buku kas</button><button type="button" data-tab="iuran">Iuran</button><button type="button" data-tab="bayar">Pembayaran</button><button type="button" data-tab="lapor">Laporan</button></div></div>
 <script>
-(function(){var b=document.getElementById('ai'),p=document.getElementById('aip');
-function set(o){p.hidden=!o;b.setAttribute('aria-expanded',o)}
+(function(){
+var AI_URL=/netlify\.app$/.test(location.hostname)?'/.netlify/functions/ai':'https://vriya-perum-gm.netlify.app/.netlify/functions/ai';
+var b=document.getElementById('ai'),p=document.getElementById('aip'),m=document.getElementById('aim'),f=document.getElementById('aif'),inp=document.getElementById('ai-in'),go=document.getElementById('ai-go'),q=document.getElementById('aq'),H=[],busy=false,who='';
+function add(role,t){var d=document.createElement('div');d.className='m '+(role==='user'?'u':'a');d.textContent=t;m.appendChild(d);m.scrollTop=m.scrollHeight;return d}
+function ctx(){
+ var now=new Date().toISOString().slice(0,10),cm=now.slice(0,7),adm=ROLE==='admin',o={tanggal_hari_ini:now,peran:adm?'admin':'warga',bulan_terbuka:bl(ym),jumlah_kk:IW.length};
+ if(!adm)o.nama_warga=IW[WID][0].replace(/\*+$/,'');
+ o.saldo_per_bulan=months().map(function(x){var t=tot(x);return{bulan:bl(x),saldo_awal:t.awal,pemasukan:t.mi,uang_air:t.ua,pengeluaran:t.ko,saldo_akhir:t.akhir}});
+ o.saldo_per_kas_bulan_terbuka={};K.forEach(function(k){var s=st(k,ym);o.saldo_per_kas_bulan_terbuka[NM[k]]={saldo_awal:s.awal,pemasukan:s.mi,uang_air:s.ua,pengeluaran:s.ko,saldo_akhir:s.akhir}});
+ o.transaksi_bulan_terbuka=S.trx.filter(function(x){return x.tgl.slice(0,7)===ym}).slice(-40).map(function(x){return{tgl:x.tgl,kas:NM[x.kas],jenis:x.j==='m'?'pemasukan':x.j==='k'?'pengeluaran':'uang air (bukan pemasukan)',ket:x.ket,jumlah:x.amt}});
+ var tg=[];IW.forEach(function(w,i){if(!adm&&i!==WID)return;var bel=[],jt=0;PMS.forEach(function(mm){if(mm>cm)return;var c=cmp(w,mm),bi=0;QS3.forEach(function(k){if(c[k]>0&&!pdk(i,w,mm,k))bi+=c[k]});if(bi>0){bel.push(bl(mm));jt+=bi}});if(bel.length)tg.push({nama:w[0].replace(/\*+$/,''),bulan_belum_lunas:bel,total_tunggakan:jt})});
+ o.tunggakan_iuran=tg;o.catatan_tunggakan='Daftar kosong berarti semua iuran sampai bulan ini sudah lunas.';
+ return o}
+function start(){
+ var w=ROLE+'|'+WID;if(w===who)return;who=w;H=[];m.innerHTML='';q.innerHTML='';q.hidden=false;
+ add('assistant','Halo! Saya asisten AI Griya Mulya. Saya bisa menjawab soal saldo kas, transaksi, dan iuran berdasarkan data di website ini. Jawaban AI bisa keliru, jadi untuk angka penting cek juga di menu Buku kas atau Iuran.');
+ var qs=ROLE==='admin'?[['Berapa saldo kas bulan ini?','Saldo kas bulan ini'],['Siapa saja yang belum membayar iuran?','Siapa belum bayar?'],['Apa saja pengeluaran bulan ini?','Pengeluaran bulan ini']]:[['Apakah iuran saya sudah lunas?','Iuran saya lunas?'],['Berapa saldo kas bulan ini?','Saldo kas bulan ini'],['Apa saja pengeluaran bulan ini?','Pengeluaran bulan ini']];
+ qs.forEach(function(x){var e=document.createElement('button');e.type='button';e.setAttribute('data-ai-q',x[0]);e.textContent=x[1];q.appendChild(e)})}
+function ask(t){
+ t=(t||'').trim();if(!t||busy)return;
+ if(!REMOTE||!sb){add('user',t);add('assistant','Asisten AI hanya aktif di versi online website ini.');return}
+ busy=true;go.disabled=true;q.hidden=true;add('user',t);H.push({role:'user',content:t});
+ var w=add('assistant','•••');w.classList.add('ty');
+ sb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)throw new Error('401');
+  return fetch(AI_URL,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+s.access_token},body:JSON.stringify({messages:H.slice(-10),context:ctx()})})})
+ .then(function(r){if(r.status===401)throw new Error('401');if(!r.ok)throw new Error('err');return r.json()})
+ .then(function(j){var a=(j.reply||'').trim()||'Maaf, saya belum bisa menjawab itu.';w.classList.remove('ty');w.textContent=a;H.push({role:'assistant',content:a})})
+ .catch(function(e){w.classList.remove('ty');w.textContent=e.message==='401'?'Sesi Anda berakhir. Silakan keluar lalu masuk lagi.':'Asisten sedang tidak tersedia. Coba lagi sebentar lagi.';H.pop()})
+ .then(function(){busy=false;go.disabled=false;m.scrollTop=m.scrollHeight})}
+function set(o){p.hidden=!o;b.setAttribute('aria-expanded',o);if(o){start();setTimeout(function(){inp.focus()},60)}}
 b.addEventListener('click',function(){set(p.hidden)});
-document.addEventListener('click',function(e){if(e.target.closest('#ai'))return;if(e.target.closest('#aip')&&!e.target.closest('button'))return;set(false)});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});})();
+f.addEventListener('submit',function(e){e.preventDefault();var v=inp.value;inp.value='';ask(v)});
+q.addEventListener('click',function(e){var x=e.target.closest('[data-ai-q]');if(x)ask(x.getAttribute('data-ai-q'))});
+document.addEventListener('click',function(e){if(e.target.closest('#ai'))return;if(e.target.closest('#aip')){if(e.target.closest('[data-tab]'))set(false);return}set(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});
+})();
 </script>
 </body>
 </html>
