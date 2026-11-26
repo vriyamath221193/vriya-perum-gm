@@ -249,6 +249,32 @@ nav button[aria-selected=true]{background:transparent;color:#003d79;font-weight:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style id="anim-theme">
+@media screen and (prefers-reduced-motion:no-preference){
+@keyframes mUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes mFade{from{opacity:0}to{opacity:1}}
+@keyframes mPop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes mGrowY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes mGrowX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes mSheen{0%{transform:translateX(-130%) skewX(-20deg)}55%,100%{transform:translateX(420%) skewX(-20deg)}}
+@keyframes mFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(-22px,16px)}}
+#app.pg-in>*{animation:mUp .55s cubic-bezier(.2,.7,.2,1) both}
+#app.pg-in>:nth-child(2){animation-delay:.06s}#app.pg-in>:nth-child(3){animation-delay:.12s}#app.pg-in>:nth-child(4){animation-delay:.18s}#app.pg-in>:nth-child(n+5){animation-delay:.24s}
+#app.pg-in tbody tr{animation:mFade .45s both .1s}#app.pg-in tbody tr:nth-child(n+4){animation-delay:.16s}#app.pg-in tbody tr:nth-child(n+8){animation-delay:.22s}
+#app.pg-in .pair i{transform-origin:bottom;animation:mGrowY .8s cubic-bezier(.2,.8,.2,1) both .25s}
+#app.pg-in .cv rect:not(.sel){transform-box:fill-box;transform-origin:bottom;animation:mGrowY .8s cubic-bezier(.2,.8,.2,1) both .25s}
+#app.pg-in .seg i,#app.pg-in .tk i,#app.pg-in .pbar i{transform-origin:left;animation:mGrowX .9s cubic-bezier(.2,.8,.2,1) both .3s}
+.hero::before{content:"";position:absolute;top:0;bottom:0;left:0;width:30%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.13),transparent);animation:mSheen 7s ease-in-out infinite 1.5s;pointer-events:none}
+.hero::after{animation:mFloat 14s ease-in-out infinite}
+.btn{transition:transform .15s,box-shadow .15s,filter .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 18px -10px rgba(0,43,91,.55)}.btn:active{transform:none;box-shadow:none}
+.kc,.tl{transition:transform .2s,border-color .2s,box-shadow .2s}.kc:hover,.tl:hover{transform:translateY(-3px)}
+nav button svg{transition:transform .2s}nav button:hover svg{transform:translateX(3px) scale(1.08)}
+.chip,.tabs button{transition:background .2s,color .2s,border-color .2s}
+.lg:not([hidden]) .lc{animation:mPop .55s cubic-bezier(.2,.7,.2,1) both}
+dialog[open]{animation:mPop .3s cubic-bezier(.2,.7,.2,1) both}dialog[open]::backdrop{animation:mFade .3s both}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -632,6 +658,58 @@ document.addEventListener('click',function(e){var t=e.target.closest('button');i
 document.addEventListener('change',function(e){var n=e.target.dataset&&e.target.dataset.wa;if(n){S.wa=S.wa||{};S.wa[n]=e.target.value.trim();if(REMOTE)sb.from('kontak').upsert({warga_idx:IW.findIndex(function(w){return w[0]===n}),nomor:S.wa[n]}).then(function(r){if(r.error)toast('Gagal menyimpan nomor')});save();toast('Nomor WhatsApp disimpan')}});
 (function(){var r=document.documentElement;r.style.setProperty('--logo','url('+LOGO+')');var l=document.createElement('link');l.rel='icon';l.href=LOGO;document.head.appendChild(l)})();
 boot();
+</script>
+<script>
+(function(){
+var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches,last='',tm;
+function count(el){
+ if(el.children.length)return;var m=el.textContent.trim().match(/^(\D*?)(\d[\d.]*)(\D*)$/);
+ if(!m||/,/.test(m[2]))return;var to=parseInt(m[2].replace(/\./g,''),10);if(!(to>0))return;
+ var t0=performance.now(),d=900;
+ (function f(t){var p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);
+  el.textContent=m[1]+Math.round(to*e).toLocaleString('id-ID')+m[3];
+  if(p<1)requestAnimationFrame(f)})(t0);
+}
+function go(){
+ if(rm)return;var a=document.getElementById('app');if(!a||!a.firstChild)return;
+ var k=[window.tab,window.kas,window.ym].join('|');if(k===last)return;last=k;
+ a.classList.remove('pg-in');void a.offsetWidth;a.classList.add('pg-in');
+ clearTimeout(tm);tm=setTimeout(function(){a.classList.remove('pg-in')},1600);
+ a.querySelectorAll('.hero .big,.ks,.tl b,.pill').forEach(count);
+}
+var r0=window.render;
+if(typeof r0==='function'){window.render=function(){var x=r0.apply(this,arguments);go();return x};}
+go();
+})();
+</script>
+<style id="ai-fab">
+#ai{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;width:58px;height:58px;border-radius:50%;border:3px solid #fcb017;background:linear-gradient(145deg,#003d79,#002b5b);padding:0;cursor:pointer;display:grid;place-items:center;box-shadow:0 12px 24px -10px rgba(0,43,91,.7);transition:transform .2s,box-shadow .2s}
+#ai:hover{transform:translateY(-3px) scale(1.05)}#ai svg{width:34px;height:34px}
+#aip{position:fixed;right:20px;bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:30;width:min(300px,calc(100vw - 32px));background:#fff;border:1px solid var(--line);border-top:4px solid #fcb017;border-radius:18px;padding:16px;box-shadow:0 24px 48px -20px rgba(0,43,91,.55)}
+#aip[hidden]{display:none}
+#aip b{display:block;color:#002b5b;font-size:15px;margin-bottom:2px}#aip p{margin:0 0 12px;font-size:13px;color:var(--mute)}
+#aip .ql{display:flex;flex-direction:column;gap:6px}
+#aip .ql button{text-align:left;background:var(--hl);color:#003d79;border:0;border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;cursor:pointer}
+#aip .ql button:hover{background:#dbe7f6}
+body:has(#lg:not([hidden])) #ai,body:has(#lg:not([hidden])) #aip{display:none}
+@media (max-width:859px){#ai{bottom:calc(84px + env(safe-area-inset-bottom,0px));right:14px;width:54px;height:54px}#aip{bottom:calc(150px + env(safe-area-inset-bottom,0px));right:14px}}
+@media print{#ai,#aip{display:none!important}}
+@media (prefers-reduced-motion:no-preference){
+@keyframes aiFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes aiBlink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+@keyframes aiPop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+#ai{animation:aiFloat 3.6s ease-in-out infinite}#ai:hover{animation:none}
+#ai .ey{transform-box:fill-box;transform-origin:center;animation:aiBlink 5s infinite}
+#aip:not([hidden]){animation:aiPop .25s cubic-bezier(.2,.7,.2,1) both}}
+</style>
+<button id="ai" type="button" aria-label="Asisten AI" aria-expanded="false" aria-controls="aip"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 5v5" stroke="#fcb017" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="4.5" r="2.4" fill="#fcb017"/><rect x="7" y="11" width="26" height="21" rx="7" fill="#fff"/><rect x="3" y="18" width="3.5" height="7" rx="1.75" fill="#fcb017"/><rect x="33.5" y="18" width="3.5" height="7" rx="1.75" fill="#fcb017"/><rect x="10.5" y="14.5" width="19" height="14" rx="4.5" fill="#002b5b"/><ellipse class="ey" cx="15.5" cy="20.5" rx="2.4" ry="2.8" fill="#fcb017"/><ellipse class="ey" cx="24.5" cy="20.5" rx="2.4" ry="2.8" fill="#fcb017"/><path d="M16.5 25.2c2 1.4 5 1.4 7 0" stroke="#fcb017" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+<div id="aip" role="dialog" aria-label="Asisten AI" hidden><b>Halo, saya asisten Griya Mulya</b><p>Mau buka bagian yang mana?</p><div class="ql"><button type="button" data-tab="ringkasan">Ringkasan keuangan</button><button type="button" data-tab="buku">Buku kas</button><button type="button" data-tab="iuran">Iuran warga</button><button type="button" data-tab="bayar">Pembayaran iuran</button><button type="button" data-tab="lapor">Laporan</button></div></div>
+<script>
+(function(){var b=document.getElementById('ai'),p=document.getElementById('aip');
+function set(o){p.hidden=!o;b.setAttribute('aria-expanded',o)}
+b.addEventListener('click',function(){set(p.hidden)});
+document.addEventListener('click',function(e){if(e.target.closest('#ai'))return;if(e.target.closest('#aip')&&!e.target.closest('button'))return;set(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});})();
 </script>
 </body>
 </html>
