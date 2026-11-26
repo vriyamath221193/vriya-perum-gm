@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Keuangan Paguyuban Griya Mulya</title>
-<meta name="theme-color" content="#08204a">
+<meta name="theme-color" content="#003d79">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:light;--bg:#f3f6fb;--sf:#fff;--ink:#0f2447;--mute:#5b6b88;--line:#dbe4f3;--pri:#1d5fd6;--on:#fff;--btnbg:linear-gradient(180deg,#2f72ea,#1d5fd6);--bglow:0 1px 2px rgba(29,95,214,.3);--in:#1d5fd6;--out:#d64562;--c1:#1d5fd6;--c2:#e04545;--c3:#17a05d;--sb:#fff;--hl:#eaf1fd;--tb:#0f2447;--tt:linear-gradient(90deg,#123d9f,#1d5fd6);--tbg:#fff;--tbg2:#f4f8ff;--th:#1b56c9;--thc:#fff;--tsal:#eaf1fd;--sgl:0px;--psh:0 1px 2px rgba(15,36,71,.05),0 8px 20px -10px rgba(15,36,71,.14);--tglow:none;--bgimg:none;
@@ -193,6 +193,56 @@ main{padding:18px 16px 112px}#toast{bottom:calc(96px + env(safe-area-inset-botto
 dialog{margin:auto 0 0;width:100%;max-width:none;border-radius:22px 22px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom,0px));max-height:92vh}
 .btn,input,select{min-height:44px}.sumb{flex-wrap:wrap}.sumb .btn{width:100%}.lc{padding:24px 20px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+}
+</style>
+<style id="mandiri-theme">
+@media screen{
+:root{--bg:#f2f5fa;--sf:#fff;--ink:#0b1f3a;--mute:#5b6b82;--line:#dde5f0;--pri:#003d79;--on:#002b5b;--btnbg:#fcb017;--bglow:none;--hl:#e6eef8;--th:#003d79;--thc:#fff;--tsal:#eef3fa;--tbg2:#f7f9fc;--in:#0e9f6e;--out:#e5484d;--tt:linear-gradient(90deg,#002b5b,#003d79);--psh:0 1px 2px rgba(0,43,91,.06),0 10px 24px -14px rgba(0,43,91,.22)}
+body{background:var(--bg);font-weight:450}
+aside{background:linear-gradient(180deg,#003d79,#002b5b);color:#b7c9e3}
+.bs{color:#a9bfdf}.foot{color:#9fb6d8}.lnk{color:#fcb017}
+nav button:hover{background:rgba(255,255,255,.08)}
+nav button[aria-selected=true]{background:rgba(255,255,255,.12);color:#fff;box-shadow:inset 4px 0 0 #fcb017}
+.tb{border-radius:16px;border:1px solid var(--line);background:#fff}
+.role{background:#fff4d9;color:#8a5a00}
+h1{color:#002b5b}
+h2::before{background:#fcb017;width:4px;height:18px}
+.panel{border-radius:16px;border:1px solid var(--line)}
+.hero{background:linear-gradient(135deg,#002b5b 0%,#003d79 58%,#0a5ca8 100%);border-top:4px solid #fcb017;border-radius:20px;box-shadow:0 18px 36px -20px rgba(0,43,91,.7)}
+.hero::after{background:rgba(252,176,23,.13);width:300px;height:300px;right:-80px;top:-110px}
+.btn{background:#fcb017;color:#002b5b;font-weight:700;border-radius:12px;box-shadow:none}
+.btn:hover{filter:brightness(1.05)}
+.btn.ghost{background:#fff;color:#003d79;border:1.5px solid #003d79}
+.btn.ghost:hover{background:var(--hl)}
+input:focus,select:focus{border-color:#003d79;box-shadow:0 0 0 3px rgba(0,61,121,.16)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #003d79;outline-offset:2px}
+.mn,.tabs{border-radius:14px;background:#fff}
+.tabs button[aria-selected=true]{background:#003d79;color:#fff;box-shadow:none}
+.chip{border-radius:99px}.chip[aria-pressed=true]{background:#003d79;border-color:#003d79;color:#fff}
+th{background:#003d79;color:#fff;border-bottom:0}
+th.in,th.out{color:#fff}th.in{box-shadow:inset 0 -3px 0 #3ddc97}th.out{box-shadow:inset 0 -3px 0 #ff8a90}
+th.cm{background:#002b5b}
+tr.tt td{background:linear-gradient(90deg,#002b5b,#003d79);color:#fff}
+tbody tr:not(.tt):not(.aw):hover td{background-image:linear-gradient(rgba(0,61,121,.05),rgba(0,61,121,.05))}
+.kc{border-radius:16px}.kc[aria-selected=true]{background:#fff;border-color:var(--kc);box-shadow:0 10px 22px -14px var(--kc)}
+.note{background:#fffaf0;border-color:#f6dfaa}.ni{background:#fcb017;color:#002b5b}
+.total{background:linear-gradient(135deg,#002b5b,#003d79);border-left:6px solid #fcb017;border-radius:18px}
+.pill{color:#002b5b}
+.pbar i{background:linear-gradient(90deg,#003d79,#fcb017)}
+.tk{background:#e1e9f5}
+.bd-AK{background:#e6eef8;color:#003d79}
+dialog{border-radius:20px}dialog::backdrop{background:rgba(0,43,91,.55)}
+.lg{background:linear-gradient(160deg,#002b5b,#003d79 62%,#0a5ca8)}
+.lc{border-top:5px solid #fcb017;border-radius:22px}
+#toast{background:#002b5b;color:#fff;border-left:4px solid #fcb017}
+::selection{background:#ffe2a0}
+@media (max-width:859px){
+aside{background:#003d79;box-shadow:none;border-bottom:3px solid #fcb017}
+nav{left:0;right:0;bottom:0;border:0;border-top:1px solid var(--line);border-radius:0;background:#fff;box-shadow:0 -8px 24px -14px rgba(0,43,91,.35);backdrop-filter:none;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{color:#5b6b82;border-radius:12px}
+nav button:hover{background:var(--hl)}
+nav button[aria-selected=true]{background:transparent;color:#003d79;font-weight:700;box-shadow:inset 0 3px 0 #fcb017;border-radius:0 0 12px 12px}
+#toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
