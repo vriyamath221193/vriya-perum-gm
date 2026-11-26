@@ -732,6 +732,20 @@ function ctx(){
  var tg=[];IW.forEach(function(w,i){if(!adm&&i!==WID)return;var bel=[],jt=0;PMS.forEach(function(mm){if(mm>cm)return;var c=cmp(w,mm),bi=0;QS3.forEach(function(k){if(c[k]>0&&!pdk(i,w,mm,k))bi+=c[k]});if(bi>0){bel.push(bl(mm));jt+=bi}});if(bel.length)tg.push({nama:w[0].replace(/\*+$/,''),bulan_belum_lunas:bel,total_tunggakan:jt})});
  o.tunggakan_iuran=tg;o.catatan_tunggakan='Daftar kosong berarti semua iuran sampai bulan ini sudah lunas.';
  return o}
+function local(t){
+ var c=ctx(),q=t.toLowerCase(),adm=c.peran==='admin',B=c.bulan_terbuka,tx=c.transaksi_bulan_terbuka,tg=c.tunggakan_iuran,
+ sm=c.saldo_per_bulan.filter(function(x){return x.bulan===B})[0]||{saldo_awal:0,pemasukan:0,uang_air:0,pengeluaran:0,saldo_akhir:0},
+ upto=bl(c.tanggal_hari_ini.slice(0,7));
+ function lst(j){return tx.filter(function(x){return x.jenis===j}).slice(0,8).map(function(x){return '- '+x.tgl.slice(8)+'/'+x.tgl.slice(5,7)+' '+x.ket.replace(/^~/,'')+' ('+x.kas+'): '+rp(x.jumlah)}).join('\n')}
+ if(/belum|tunggak|menunggak|lunas|utang|iuran saya|sudah bayar/.test(q)){
+  if(!tg.length)return adm?'Semua iuran warga sampai '+upto+' sudah lunas.':'Iuran Anda sudah lunas sampai '+upto+'.';
+  if(!adm)return 'Iuran Anda yang belum lunas: '+tg[0].bulan_belum_lunas.join(', ')+'. Total '+rp(tg[0].total_tunggakan)+'. Bayar lewat menu Pembayaran.';
+  return 'Iuran belum lunas sampai '+upto+' ('+tg.length+' warga):\n'+tg.slice(0,15).map(function(x){return '- '+x.nama+': '+x.bulan_belum_lunas.join(', ')+' ('+rp(x.total_tunggakan)+')'}).join('\n')+(tg.length>15?'\n...dan '+(tg.length-15)+' lainnya. Lihat menu Iuran warga.':'')}
+ if(/pengeluaran|keluar|belanja|biaya|bayar tagihan/.test(q)){var l=lst('pengeluaran');return 'Pengeluaran '+B+': '+rp(sm.pengeluaran)+(l?'\n'+l:'\nBelum ada pengeluaran tercatat.')}
+ if(/pemasukan|masuk|terima|setoran/.test(q)){var m=lst('pemasukan');return 'Pemasukan '+B+': '+rp(sm.pemasukan)+(m?'\n'+m:'\nBelum ada pemasukan tercatat.')+(sm.uang_air?'\nUang Air '+rp(sm.uang_air)+' tidak dihitung pemasukan kas.':'')}
+ if(/saldo|kas|uang|sisa|total|dana/.test(q)){var k=c.saldo_per_kas_bulan_terbuka;return 'Saldo akhir '+B+': '+rp(sm.saldo_akhir)+'\n'+Object.keys(k).map(function(n){return '- '+n+': '+rp(k[n].saldo_akhir)}).join('\n')+'\nPemasukan '+rp(sm.pemasukan)+', pengeluaran '+rp(sm.pengeluaran)+'.'}
+ if(/berapa (kk|warga)|jumlah (kk|warga)|warga/.test(q))return 'Ada '+c.jumlah_kk+' KK warga di Perum Griya Mulya.';
+ return 'Saya belum paham pertanyaan itu. Coba tanya soal saldo kas, pemasukan, pengeluaran, atau iuran yang belum lunas.'}
 function start(){
  var w=ROLE+'|'+WID;if(w===who)return;who=w;H=[];m.innerHTML='';q.innerHTML='';q.hidden=false;
  add('assistant','Halo! Saya asisten AI Griya Mulya. Saya bisa menjawab soal saldo kas, transaksi, dan iuran berdasarkan data di website ini. Jawaban AI bisa keliru, jadi untuk angka penting cek juga di menu Buku kas atau Iuran.');
@@ -739,14 +753,16 @@ function start(){
  qs.forEach(function(x){var e=document.createElement('button');e.type='button';e.setAttribute('data-ai-q',x[0]);e.textContent=x[1];q.appendChild(e)})}
 function ask(t){
  t=(t||'').trim();if(!t||busy)return;
- if(!REMOTE||!sb){add('user',t);add('assistant','Asisten AI hanya aktif di versi online website ini.');return}
+ if(!REMOTE||!sb){add('user',t);add('assistant',local(t));return}
  busy=true;go.disabled=true;q.hidden=true;add('user',t);H.push({role:'user',content:t});
  var w=add('assistant','•••');w.classList.add('ty');
  sb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)throw new Error('401');
   return fetch(AI_URL,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+s.access_token},body:JSON.stringify({messages:H.slice(-10),context:ctx()})})})
  .then(function(r){if(r.status===401)throw new Error('401');if(!r.ok)throw new Error('err');return r.json()})
  .then(function(j){var a=(j.reply||'').trim()||'Maaf, saya belum bisa menjawab itu.';w.classList.remove('ty');w.textContent=a;H.push({role:'assistant',content:a})})
- .catch(function(e){w.classList.remove('ty');w.textContent=e.message==='401'?'Sesi Anda berakhir. Silakan keluar lalu masuk lagi.':'Asisten sedang tidak tersedia. Coba lagi sebentar lagi.';H.pop()})
+ .catch(function(e){w.classList.remove('ty');
+  if(e.message==='401'){w.textContent='Sesi Anda berakhir. Silakan keluar lalu masuk lagi.';H.pop();return}
+  var a=local(t);w.textContent=a+'\n\n(Dijawab dari data website. Asisten AI online belum aktif.)';H.push({role:'assistant',content:a})})
  .then(function(){busy=false;go.disabled=false;m.scrollTop=m.scrollHeight})}
 function set(o){p.hidden=!o;b.setAttribute('aria-expanded',o);if(o){start();setTimeout(function(){inp.focus()},60)}}
 b.addEventListener('click',function(){set(p.hidden)});
