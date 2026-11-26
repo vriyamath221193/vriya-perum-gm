@@ -758,11 +758,11 @@ function ask(t){
  var w=add('assistant','•••');w.classList.add('ty');
  sb.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)throw new Error('401');
   return fetch(AI_URL,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+s.access_token},body:JSON.stringify({messages:H.slice(-10),context:ctx()})})})
- .then(function(r){if(r.status===401)throw new Error('401');if(!r.ok)throw new Error('err');return r.json()})
+ .then(function(r){if(r.status===401)throw new Error('401');if(!r.ok)return r.json().catch(function(){return{}}).then(function(j){throw new Error('HTTP '+r.status+(j.error?' '+j.error:'')+(j.status?' '+j.status:''))});return r.json()})
  .then(function(j){var a=(j.reply||'').trim()||'Maaf, saya belum bisa menjawab itu.';w.classList.remove('ty');w.textContent=a;H.push({role:'assistant',content:a})})
  .catch(function(e){w.classList.remove('ty');
   if(e.message==='401'){w.textContent='Sesi Anda berakhir. Silakan keluar lalu masuk lagi.';H.pop();return}
-  var a=local(t);w.textContent=a+'\n\n(Dijawab dari data website. Asisten AI online belum aktif.)';H.push({role:'assistant',content:a})})
+  var a=local(t);w.textContent=a+'\n\n(Dijawab dari data website. Asisten AI online belum aktif. Kode: '+(/^HTTP/.test(e.message)?e.message:'tidak terhubung ke server')+')';H.push({role:'assistant',content:a})})
  .then(function(){busy=false;go.disabled=false;m.scrollTop=m.scrollHeight})}
 function set(o){p.hidden=!o;b.setAttribute('aria-expanded',o);if(o){start();setTimeout(function(){inp.focus()},60)}}
 b.addEventListener('click',function(){set(p.hidden)});
